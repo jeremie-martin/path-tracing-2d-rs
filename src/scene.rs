@@ -1,6 +1,5 @@
 use crate::light::Light;
 use crate::object::Object;
-use crate::vector::vec2;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

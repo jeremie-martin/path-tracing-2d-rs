@@ -1,6 +1,6 @@
-use crate::vector::vec2;
+use crate::utils::Vec2;
 
 pub struct Ray {
-    pub origin: vec2,
-    pub dir: vec2,
+    pub origin: Vec2,
+    pub dir: Vec2,
 }
