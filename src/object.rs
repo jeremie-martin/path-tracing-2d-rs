@@ -1,5 +1,4 @@
-use crate::ray::Ray;
-use crate::utils::Vec2;
+use crate::utils::{Ray, Vec2};
 use serde::{Deserialize, Serialize};
 
 pub trait Intersectable {
