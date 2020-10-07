@@ -1,12 +1,7 @@
-extern crate serde;
-extern crate serde_json;
-
 use rayrs::scene::Scene;
-use std::fs::File;
 
 fn main() {
-    let scene_file = File::open("Examples/simple.json").expect("File not found");
-    let scene: Scene = serde_json::from_reader(&scene_file).unwrap();
+    let scene = Scene::new("Examples/simple.json");
 
-    println!("{:?}", scene);
+    scene.trace();
 }
