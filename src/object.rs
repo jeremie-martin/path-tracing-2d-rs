@@ -32,7 +32,7 @@ impl SceneObject {
         #[cfg(feature = "profile")]
         let _guard = flame::start_guard("Scene Cast");
         self.geometry
-            .toi_and_normal_with_ray(&self.transform, ray, 2.0, false)
+            .toi_and_normal_with_ray(&self.transform, ray, 20.0, false)
     }
 }
 

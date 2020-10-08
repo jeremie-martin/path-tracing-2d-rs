@@ -3,6 +3,7 @@ extern crate serde_json;
 
 use crate::light::Light;
 use crate::object::{Object, SceneObject};
+use crate::screen::Screen;
 use crate::utils::*;
 use line_drawing::XiaolinWu;
 use serde::{Deserialize, Serialize};
@@ -22,7 +23,7 @@ pub struct Scene {
     pub ray_count: i64,
     pub lights: Vec<Light>,
     pub objects: Vec<SceneObject>,
-    pub screen: Vec<f64>,
+    pub screen: Screen,
 }
 
 impl Scene {
@@ -37,10 +38,9 @@ impl Scene {
                     Box::new(Ball::new(s.radius)),
                     Isometry::new(s.center.clone(), 0.0),
                 ),
-                Object::Segment(s) => SceneObject::new(
-                    Box::new(Segment::new(s.p1, s.p2)),
-                    Isometry::new(Vec2::new(0.0, 0.0), 0.0),
-                ),
+                Object::Segment(s) => {
+                    SceneObject::new(Box::new(Segment::new(s.p1, s.p2)), Isometry::identity())
+                }
             };
 
             objects.push(tmp);
@@ -51,6 +51,7 @@ impl Scene {
             ray_count: scene.ray_count,
             lights: scene.lights,
             objects,
+            screen: Screen::new(800, 800),
         }
     }
 
@@ -71,18 +72,22 @@ impl Scene {
                 (None, _) => inter,
                 (_, None) => closest,
             }
-        });
+        })
     }
 
-    pub fn trace(&self) {
-        for light in self.lights.iter() {
-            let ray = light.get_ray();
+    pub fn trace(&mut self) {
+        for _ in (0..self.ray_count) {
+            for light in self.lights.iter() {
+                let ray = light.get_ray();
 
-            let intersection = getClosest(&ray);
-            println!("r.p {}, r.d {}", ray.origin, ray.dir);
-            if let Some(inter) = intersection {
-                for ((x, y), value) in XiaolinWu::<f32, i8>::new(ray.origin, inter) {}
+                let intersection = self.getClosest(&ray);
+                // println!("r.p {}, r.d {}", ray.origin, ray.dir);
+                if let Some(inter) = intersection {
+                    self.screen.draw_line(&ray.origin, &ray.point_at(inter.toi))
+                }
             }
         }
+
+        self.screen.save_img();
     }
 }
